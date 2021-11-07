@@ -22,13 +22,14 @@ namespace control
 {
 
 ControlOperatorInterfaceEdu controlOperatorInterfaceEdu(drivers());
+agitator::AgitatorSubsystem agitatorSubsystem(drivers()); 
 /* define subsystems --------------------------------------------------------*/
 
 chassis::ChassisSubsystem chassisSubSystem(drivers())
 chassis::ChassisTankDriveCommand chassisTankDriveCommand(&chassisSubSystem, drivers(), &controlOperatorInterfaceEdu);
 
 /* define commands ----------------------------------------------------------*/
-agitator::AgitatorSubsystem agitatorSubsystem(drivers()); 
+
 agitator::AgitatorRotateCommand agitatorRotateCommand(&agitatorSubsystem, float angle); 
 
 /* define command mappings --------------------------------------------------*/
@@ -40,7 +41,8 @@ commandMapper.addMap(&holdRepeatCommandMapping);
 
 /* register subsystems here -------------------------------------------------*/
 void registerSoldierSubsystems(tap::Drivers *drivers) {
-    drivers -> commandScheduler.registerSubsystem(chassis::ChassisSubsystem *);
+    drivers -> commandScheduler.registerSubsystem(&chassisSubSystem);
+    drivers -> commandScheduler.registerSubsystem(&agitatorSubsystem);
 }
 
 
