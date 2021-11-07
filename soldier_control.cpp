@@ -21,18 +21,26 @@ static tap::driversFunc drivers = tap::DoNotUse_getDrivers;
 namespace control
 {
 
-ControlOperatorInterfaceEdu controlOperatorInterfaceEdu(tap::Drivers *){};
+ControlOperatorInterfaceEdu controlOperatorInterfaceEdu(drivers());
 /* define subsystems --------------------------------------------------------*/
 
-ChassisSubSystem chassisSubSystem(tap::Drivers *) {tap::driversFunc drivers};
-ChassisTankDriveCommand chassisTankDriveCommand(chassis::ChassisSubsystem*, tap::Driver *, control::ControlOperatorInterfaceEdu *) {tap::driversFunc drivers};
+chassis::ChassisSubsystem chassisSubSystem(drivers())
+chassis::ChassisTankDriveCommand chassisTankDriveCommand(&chassisSubSystem, drivers(), &controlOperatorInterfaceEdu);
+
 /* define commands ----------------------------------------------------------*/
+agitator::AgitatorSubsystem agitatorSubsystem(drivers()); 
+agitator::AgitatorRotateCommand agitatorRotateCommand(&agitatorSubsystem, float angle); 
 
 /* define command mappings --------------------------------------------------*/
+tap::control::CommandMapper commandMapper(drivers()); 
+tap::control::CommandMapping::HoldRepeatCommandMapping holdRepeatCommandMapping(drivers()); 
+commandMapper.addMap(&holdRepeatCommandMapping); 
+
+
 
 /* register subsystems here -------------------------------------------------*/
 void registerSoldierSubsystems(tap::Drivers *drivers) {
-    drivers ->commandScheduler.registerSubsystem(chassis::ChassisSubsystem *);
+    drivers -> commandScheduler.registerSubsystem(chassis::ChassisSubsystem *);
 }
 
 
