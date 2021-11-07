@@ -16,7 +16,7 @@ float EduPid::runControllerDerivateError(float error, float dt)
     currErrorI = currErrorI + (error * dt); 
     tap::algorithms::limitVal(currErrorI, -maxICumulative, maxICumulative); 
     
-    float output = (kp * currErrorP) + (ki * currErrorI) + (kd * currErrorD); 
+    float output = (kp * currErrorP) + (ki * currErrorI) - (kd * currErrorD); 
     tap::algorithms::limitVal(output, -maxOutput, maxOutput); 
     return output;
 }
